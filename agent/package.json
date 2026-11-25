@@ -1,0 +1,21 @@
+{
+  "name": "hsk-sentinel-agent",
+  "version": "1.0.0",
+  "description": "Risk-bounded AI trading agent for HSKSwap on HSK Chain (HSK Chain Horizon Hackathon, AI Agent Trading track)",
+  "type": "module",
+  "license": "MIT",
+  "bin": { "sentinel": "src/cli.js" },
+  "scripts": {
+    "demo": "node src/demo-fork.js",
+    "chat": "node src/cli.js",
+    "agent": "node src/cli.js --auto",
+    "keeper": "node src/keeper.js",
+    "dashboard": "node src/server.js",
+    "scan": "node src/cli.js --once status",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "ethers": "^6.13.4"
+  }
+}

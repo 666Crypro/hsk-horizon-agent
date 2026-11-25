@@ -1,0 +1,20 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.26"
+evm_version = "shanghai"
+optimizer = true
+optimizer_runs = 500
+via_ir = true
+fs_permissions = [{ access = "read-write", path = "../deployments" }]
+
+[rpc_endpoints]
+hsk_mainnet = "https://mainnet.hsk.xyz"
+hsk_testnet = "https://testnet.hsk.xyz"
+
+[fuzz]
+runs = 512
+
+[lint]
+exclude_lints = ["unsafe-typecast", "mixed-case-variable", "mixed-case-function", "asm-keccak256", "erc20-unchecked-transfer"]

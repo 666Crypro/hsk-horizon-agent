@@ -1,0 +1,8 @@
+{
+  "name": "HSK Chain Mainnet",
+  "chainId": 177,
+  "rpc": "https://mainnet.hsk.xyz",
+  "explorer": "https://hsk.blockscout.com",
+  "vault": "0xYOUR_VAULT_ADDRESS",
+  "deployBlock": 0
+}

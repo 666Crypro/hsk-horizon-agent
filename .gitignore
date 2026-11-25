@@ -1,0 +1,24 @@
+# secrets: never commit keys
+.env
+.env.*
+!.env.example
+.secrets/
+*.key
+keystore/
+
+# build output
+node_modules/
+contracts/out/
+contracts/cache/
+contracts/broadcast/**/dry-run/
+contracts/broadcast/**/31337/
+contracts/broadcast/**/*.recovery.lock
+
+# local agent state
+agent/state/
+agent/journal/
+deployments/local-fork.json
+
+# logs / local notes
+*.log
+.DS_Store
