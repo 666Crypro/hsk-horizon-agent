@@ -86,6 +86,18 @@ Full 8-step demo against the real pool on a local fork, captured in `/tmp/demo2.
 
 No profit is claimed. The −4.78% is the cost of buying a dislocation and then hitting a stop in a further dump — which is the risk system working.
 
+## Demo video run (2026-11-25, ~7:56–8:02 AM PT)
+
+`docs/demo.mp4` is built only from output captured in this session (raw logs in [`docs/demo-logs/`](demo-logs/), composed by [`scripts/demo-video.py`](../scripts/demo-video.py) with Piper TTS narration):
+
+- `forge test`: 22 / 22 unit + fuzz passed (the fork suite is a no-op without `HSK_FORK=1`, so the summary line reads 23 passed)
+- `HSK_FORK=1 forge test --match-contract Fork -vv`: passed; live spot 79303, TWAP 79605, keeper exit sold 20,628.47 WHSK for 1,403.79 USDT, NAV after exit 2,146.03 USDT, breaker not tripped
+- `npm test`: 6 / 6 passed
+- `KEEP_FORK=1 DEMO_PAUSE_MS=200 npm run demo`: wick buy refused `PriceDeviation(77702, 79589)`; two agent buys (~513 WHSK each) with verified `reasonHash`; four rogue-agent reverts; keeper stop-loss after six 60 s retries, tx `0x01176e06…` (gas 181,170), 2,026.24 WHSK sold for 140.64 USDT; final NAV 377.90 USDT, PnL −18.96 USDT (−4.78%)
+- `npm run dashboard` screenshot of the same fork state: [`docs/dashboard.png`](dashboard.png)
+
+Numbers differ slightly from the earlier run above because the live pool moved between forks.
+
 ## Testnet deployment — not broadcast
 
 A fresh deployer key was generated into the gitignored file `.secrets/deployer.key`. The corresponding address is committed at [`deployments/testnet-deployer.address`](../deployments/testnet-deployer.address):

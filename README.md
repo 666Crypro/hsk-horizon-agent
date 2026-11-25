@@ -155,7 +155,7 @@ forge script script/DeployTestnetMocks.s.sol --rpc-url hsk_testnet --broadcast -
 
 The vault also works on any real Uniswap v3-compatible pool: pass `POOL`, `ROUTER` and `BASE` to `Deploy.s.sol`.
 
-Submission draft, demo-video script and the pre-deadline checklist live in [SUBMISSION.md](SUBMISSION.md). What was tested, and why there is no testnet address yet, is in [docs/VERIFICATION.md](docs/VERIFICATION.md).
+**Demo video (2:31):** [docs/demo.mp4](docs/demo.mp4). Submission draft, demo-video script and the pre-deadline checklist live in [SUBMISSION.md](SUBMISSION.md). What was tested, and why there is no testnet address yet, is in [docs/VERIFICATION.md](docs/VERIFICATION.md).
 
 ## Honest limitations
 

@@ -1,0 +1,33 @@
+No files changed, compilation skipped
+
+Ran 1 test for test/SentinelVault.fork.t.sol:SentinelVaultForkTest
+[PASS] test_Fork_FullLifecycle() (gas: 2545)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 4.39ms (39.34µs CPU time)
+
+Ran 22 tests for test/SentinelVault.t.sol:SentinelVaultTest
+[PASS] testFuzz_AgentCannotEscapePolicy(bool,uint256,uint256,int16,uint16) (runs: 512, μ: 228017, ~: 197363)
+[PASS] testFuzz_MeanTickRoundsDown(int24,uint32) (runs: 512, μ: 2362, ~: 2354)
+[PASS] test_AgentBuyWithinLimits() (gas: 249143)
+[PASS] test_AgentCanOnlyTightenStop() (gas: 154627)
+[PASS] test_AgentSellWithinLimits() (gas: 236175)
+[PASS] test_DailyLimitAndReset() (gas: 477541)
+[PASS] test_DrawdownBreakerHaltsAgent() (gas: 448150)
+[PASS] test_ExitMinOutAnchoredToTwap() (gas: 234094)
+[PASS] test_KeeperTriggersStopLoss_EvenWhenPaused() (gas: 364599)
+[PASS] test_OnlyOwnerAdmin() (gas: 113803)
+[PASS] test_PriceMatchesLiveMarket() (gas: 54781)
+[PASS] test_RevertWhen_BadPolicy() (gas: 37190)
+[PASS] test_RevertWhen_Cooldown() (gas: 382660)
+[PASS] test_RevertWhen_ExposureTooHigh() (gas: 292684)
+[PASS] test_RevertWhen_MinOutTooLoose() (gas: 108237)
+[PASS] test_RevertWhen_NotAgent() (gas: 40490)
+[PASS] test_RevertWhen_Paused() (gas: 116321)
+[PASS] test_RevertWhen_SpotDeviatesFromTwap() (gas: 116593)
+[PASS] test_RevertWhen_TradeTooLarge() (gas: 63124)
+[PASS] test_StopLossIgnoresSpotOnlyWick() (gas: 167107)
+[PASS] test_TakeProfit() (gas: 210934)
+[PASS] test_WithdrawDoesNotTripBreaker() (gas: 196525)
+Suite result: ok. 22 passed; 0 failed; 0 skipped; finished in 21.06ms (31.81ms CPU time)
+
+Ran 2 test suites in 22.36ms (25.45ms CPU time): 23 tests passed, 0 failed, 0 skipped (23 total tests)
+

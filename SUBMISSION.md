@@ -1,8 +1,9 @@
 # DoraHacks BUIDL draft — HSK Sentinel
 
-**Do not submit this automatically.** Copy the fields below into a new BUIDL on the [HSK Chain Horizon Hackathon · Seoul](https://dorahacks.io/hackathon/hskchainseoul/detail) page after the GitHub repo is public. Deadline: **Wednesday, December 2, 2026, 8:00 PM Pacific Time** (Thursday, December 3, 2026, 13:00 KST).
+Paste the fields below into a new BUIDL on the [HSK Chain Horizon Hackathon · Seoul](https://dorahacks.io/hackathon/hskchainseoul/detail) page. Deadline: **Wednesday, December 2, 2026, 8:00 PM Pacific Time** (Thursday, December 3, 2026, 13:00 KST).
 
-Proposed GitHub repo (not created in this pass; publish only after you approve): **https://github.com/666Crypro/hsk-horizon-agent**
+Public repo: **https://github.com/666Crypro/hsk-horizon-agent**  
+Demo video (2:31, 1080p, narrated): **https://github.com/666Crypro/hsk-horizon-agent/blob/main/docs/demo.mp4**
 
 ---
 
@@ -23,6 +24,21 @@ Individuals may enter. Winners must deploy on **HSK Chain mainnet (chain 177)** 
 
 ## BUIDL form (paste-ready)
 
+### Quick fields
+
+| DoraHacks field | Paste this |
+|---|---|
+| BUIDL name | `HSK Sentinel` |
+| One-line brief | `An AI trading agent for HSKSwap that cannot blow up your wallet: the agent decides, a vault on HSK Chain enforces the limits.` |
+| Track | `AI Agent Trading` |
+| Tags | `AI Agent`, `DeFi`, `Trading`, `HSK Chain`, `HSKSwap`, `Solidity`, `Foundry`, `Risk Management` |
+| GitHub | `https://github.com/666Crypro/hsk-horizon-agent` |
+| Demo video | `https://github.com/666Crypro/hsk-horizon-agent/blob/main/docs/demo.mp4` |
+| Description | the markdown block under **Long description** below |
+| Contract address | none yet (see **Contract address** below; local-fork address only, not a live deployment) |
+| Team | Individual, Arthur Shavlovsky (GitHub `666Crypro`) |
+
+
 **Project name:** HSK Sentinel
 
 **Tagline:** An AI trading agent for HSKSwap that cannot blow up your wallet — the agent decides, a smart contract on HSK Chain enforces the limits.
@@ -30,7 +46,7 @@ Individuals may enter. Winners must deploy on **HSK Chain mainnet (chain 177)** 
 **Track:** AI Agent Trading
 
 **One-paragraph summary:**
-Autonomous DEX agents usually fail in two ways: the strategy is wrong, or the agent itself goes wrong — a hallucinated size, `minOut = 0`, a leaked hot key, a crashed server in a crash. HSK Sentinel splits the roles. A human owner deposits WHSK and USDT into `SentinelVault` and signs a risk policy (per-trade and daily caps, TWAP-anchored slippage, spot/TWAP manipulation guard, max exposure, drawdown breaker, stop-loss / take-profit). An AI agent hot key can only trade inside that policy, on the HSKSwap WHSK/USDT pool. The agent watches on-chain TWAPs and an off-chain reference price, proposes trades, optionally runs them past an LLM "risk officer" that may veto or shrink a trade but never enlarge it, and writes `keccak256` of the full decision record on-chain with every fill. If the agent is offline, anyone can trigger the stop. We verified the contract with Foundry unit, fuzz and a fork of HSK mainnet against the real HSKSwap pool, plus a scripted end-to-end demo.
+Autonomous DEX agents usually fail in two ways: the strategy is wrong, or the agent itself goes wrong — a hallucinated size, `minOut = 0`, a leaked hot key, or a server that dies mid-crash. HSK Sentinel splits the roles. A human owner deposits WHSK and USDT into `SentinelVault` and signs a risk policy (per-trade and daily caps, TWAP-anchored slippage, spot/TWAP manipulation guard, max exposure, drawdown breaker, stop-loss / take-profit). An AI agent hot key can only trade inside that policy, on the HSKSwap WHSK/USDT pool. The agent watches on-chain TWAPs and an off-chain reference price, proposes trades, optionally runs them past an LLM "risk officer" that may veto or shrink a trade but never enlarge it, and writes `keccak256` of the full decision record on-chain with every fill. If the agent is offline, anyone can trigger the stop. We verified the contract with Foundry unit, fuzz and a fork of HSK mainnet against the real HSKSwap pool, plus a scripted end-to-end demo.
 
 **Long description (markdown, for the BUIDL body):**
 
@@ -72,6 +88,8 @@ cd ../agent && npm install && npm test && npm run demo
 
 `npm run demo` forks HSK Chain mainnet, deploys the vault against the *real* HSKSwap pool, and walks through chat configuration, a refused wick-buy, a confirmed-TWAP entry, a rogue agent getting reverted, and a crash where a keeper runs the stop while the agent is offline.
 
+Demo video: https://github.com/666Crypro/hsk-horizon-agent/blob/main/docs/demo.mp4
+
 We have not claimed any profit. The contracts are unaudited hackathon code.
 
 ## HSK Chain / HSKSwap addresses used
@@ -86,11 +104,11 @@ We have not claimed any profit. The contracts are unaudited hackathon code.
 
 **Tags / tech:** Solidity, Foundry, HSK Chain, HSKSwap, Uniswap V3, ethers.js, AI agent, TWAP, stop-loss
 
-**Demo URL:** (local) `npm run demo` and `npm run dashboard` at http://localhost:8788 — replace with a recorded video URL after you publish it.
+**Demo URL:** no hosted demo. Run locally with `npm run demo`, then `npm run dashboard` at http://localhost:8788.
 
-**Demo video URL:** *paste your YouTube / X / Google Drive link after recording (script below).*
+**Demo video URL:** https://github.com/666Crypro/hsk-horizon-agent/blob/main/docs/demo.mp4 (2:31, 1080p H.264/AAC, narrated; built from real captured output by `scripts/demo-video.py`)
 
-**Repository:** https://github.com/666Crypro/hsk-horizon-agent *(after you approve publishing)*
+**Repository:** https://github.com/666Crypro/hsk-horizon-agent
 
 **Contract address (testnet / mainnet):**
 - Testnet: not yet deployed. Official faucet is captcha-gated; the known HSKSwap addresses have no code on chain 133. A funded-deployer checklist is at the bottom of this file. Fresh deployer (no funds, key is gitignored): `0x481496f054370FcBDe0Cb150992a8824C57129ad`
@@ -113,6 +131,8 @@ We have not claimed any profit. The contracts are unaudited hackathon code.
 ---
 
 ## Demo video script (2–3 minutes)
+
+**Done:** the recorded video is at https://github.com/666Crypro/hsk-horizon-agent/blob/main/docs/demo.mp4. It follows this script, using real output from `forge test`, the fork test, `npm test`, `npm run demo` and `npm run dashboard` (captured logs in `docs/demo-logs/`). Rebuild it with `python3 scripts/demo-video.py`.
 
 Record your screen (terminal + a second window for the dashboard if you like) and talk over it. Suggested total: **about 2 minutes 30 seconds**. Run `KEEP_FORK=1 npm run demo` first if you want the fork still up at the end, or record a fresh `DEMO_PAUSE_MS=400 npm run demo`.
 
@@ -145,11 +165,11 @@ Record in 1080p, keep the terminal font large, and upload unlisted to YouTube (o
 
 ## Arthur's checklist (must be done by Wed Dec 2, 2026, 8:00 PM PT)
 
-Do these yourself. Nobody should register, submit, log in to DoraHacks, post on X, sign a mainnet transaction, or spend money on your behalf.
+The DoraHacks submission needs your account and your OK. Nobody should post on X, sign a mainnet transaction, or spend money on your behalf.
 
 ### Before you submit
 
-1. **Approve publishing the repo**, then create a **public** GitHub repository `666Crypro/hsk-horizon-agent` and push the `main` branch from this tree (`/workspace/hsk-horizon-entry`). Do not commit `.env`, `.secrets/`, or any key.
+1. ~~Publish the repo~~ Done: https://github.com/666Crypro/hsk-horizon-agent.
 2. **Register on DoraHacks** for [HSK Chain Horizon Hackathon · Seoul](https://dorahacks.io/hackathon/hskchainseoul/detail) as an individual and open a new BUIDL. Paste the fields above. Select **AI Agent Trading**.
 3. **(Recommended) Fund the testnet deployer and deploy the mock fixture**, so the BUIDL can show a contract on HSK testnet (chain 133):
    1. Add HSK Chain Testnet to your wallet: RPC `https://testnet.hsk.xyz`, chain ID `133`, symbol `HSK`, explorer `https://testnet-explorer.hsk.xyz`.
@@ -164,7 +184,7 @@ Do these yourself. Nobody should register, submit, log in to DoraHacks, post on 
       # then verify on https://testnet-explorer.hsk.xyz and paste the vault address into the BUIDL
       ```
       Known mainnet HSKSwap addresses have **no code on testnet**, which is why this script deploys a self-contained mock pool. Prefer the mainnet-fork demo (`npm run demo`) as the evidence of integration with real HSKSwap.
-4. **Record the demo video** from the script above (2–3 minutes). Upload it unlisted and paste the link.
+4. ~~Record the demo video~~ Done: https://github.com/666Crypro/hsk-horizon-agent/blob/main/docs/demo.mp4.
 5. **Optional:** turn the 5-slide outline into a short PDF or Google Slides deck and attach it if the form has a slot.
 6. **Double-check** the BUIDL: track, public repo, video, (optional) testnet address, original-work confirmation. Submit before **8:00 PM PT on Wednesday, December 2, 2026**. The form closes automatically at December 3, 13:00 KST.
 

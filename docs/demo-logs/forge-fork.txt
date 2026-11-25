@@ -1,0 +1,21 @@
+No files changed, compilation skipped
+
+Ran 1 test for test/SentinelVault.fork.t.sol:SentinelVaultForkTest
+[PASS] test_Fork_FullLifecycle() (gas: 1336577)
+Logs:
+  live spot  (USDT raw / WHSK): 79303
+  live twap  (USDT raw / WHSK): 79605
+  vault NAV  (USDT raw):        2384335023
+  agent bought WHSK (wei):      628465204803520459285
+  after dump spot:              68503
+  after dump twap:              79589
+  twap after window:            68503
+  stop-loss sold WHSK (wei):    20628465204803520459285
+  stop-loss received USDT raw:  1403794627
+  NAV after exit (USDT raw):    2146029650
+  breaker tripped:              false
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 12.82s (4.37s CPU time)
+
+Ran 1 test suite in 12.83s (12.82s CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)
+

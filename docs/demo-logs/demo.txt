@@ -1,0 +1,99 @@
+
+> hsk-sentinel-agent@1.0.0 demo
+> node src/demo-fork.js
+
+HSK Sentinel demo: forking HSK Chain mainnet (https://mainnet.hsk.xyz) on http://127.0.0.1:8547
+
+== 1. Owner deploys SentinelVault bound to the live HSKSwap WHSK/USDT pool ===
+vault 0x38a024C0b412B9d1db8BC398140D00F5Af3093D4
+  owner 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (human, cold)
+  agent 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 (AI hot key, trade-only)
+  policy: 60 USDT/trade, 300 USDT/day, 1% slippage vs TWAP, 1.5% spot/TWAP guard, 12% drawdown breaker, 80% max exposure
+
+== 2. Owner funds the vault (wrap HSK, buy USDT on HSKSwap, deposit) =========
+you> how am I doing?
+Vault 0x38a024C0b412B9d1db8BC398140D00F5Af3093D4 on HSK mainnet fork (local)
+  Position   1000.00 WHSK (~79.60 USDT) + 317.26 USDT
+  NAV        396.85 USDT   PnL +0.00 USDT (0.00%)   drawdown 0.00% of 12% breaker
+  Price      spot 0.079486  TWAP(600s) 0.079597 USDT/WHSK
+  Stops      stop-loss off  take-profit off
+  Limits     60 USDT/trade, 300/300 USDT left today, slippage 1%, exposure <= 80%
+  Agent      size 50 USDT, risk medium, every 120s, running
+  Trades     0 agent trades, 0 keeper exits
+
+== 3. Conversational control: size, risk, frequency, assets, stops ===========
+you> trade 40 USDT max per position
+Position size set to 40 USDT per trade.
+you> be more aggressive
+Risk appetite: high. Entry threshold 0.20%, 100% of max size per signal, target exposure 80%, trailing stop 8%.
+you> check every 2 minutes
+I'll evaluate the market every 120s.
+you> what can you trade?
+Target assets: WHSK/USDT on HSKSwap (pool 0x4ff515761864e7838B0AdB8b5b2B8B7A068905dC, 0.3% fee). The vault is bound to this pool at deploy time, so the agent physically cannot trade anything else. Deploy another vault per pair to add assets.
+owner armed on-chain stop-loss at -5% (0.075617) with a -10% floor the agent can never go below
+you> stop 7%
+The vault refused: OnlyTighten() (the agent may only tighten the stop, never loosen it below the owner floor)
+you> stop 3%
+Stop-loss set on-chain at 0.077209 USDT/WHSK (TWAP 0.079597). Any keeper can execute it, even if I'm offline. tx 0x35d0e167cbfa8219bef56612d6af001cd57d2527f8f265c16d2aedd369051d5a
+
+== 4. Market event: a whale dumps 60k WHSK into HSKSwap; DEX now trades below the reference 
+you> any arbitrage?
+HSKSwap WHSK/USDT spot 0.077702; TWAP 1m 0.079574 5m 0.079598 15m 0.079693 1h 0.080357
+Reference 0.079597 (env REF_PRICE); DEX spread -2.38%, EDGE 2.08% after 0.30% fee -> buy on DEX
+Momentum 5m vs 1h -0.95%
+agent tick (same block as the dump):
+  market  spot 0.077702 | TWAP 5m 0.079598 1h 0.080357 | ref 0.079597
+  decide  BUY ~40 USDT (score 1, risk high)
+          - DEX -2.38% below reference (env REF_PRICE); edge after 0.30% fee
+  REFUSED by vault: PriceDeviation(77702, 79589)
+-> the vault refused to buy the wick: spot is too far from the TWAP (possible manipulation).
+
+== 5. 10 minutes later: TWAP has converged, the discount vs reference persists -> agent buys 
+  market  spot 0.077702 | TWAP 5m 0.077702 1h 0.079518 | ref 0.079597
+  decide  BUY ~40 USDT (score 1, risk high)
+          - DEX -2.38% below reference (env REF_PRICE); edge after 0.30% fee
+  filled  513.167607686336841889 WHSK  NAV 394.83 USDT  tx 0x0b6162cae4bdfb45c4deca2c719387cf35f946d1eb560b373868aee33db52063
+  journal reasonHash 0x7aa6e98cc2a40ebc0e86bf8c124a6c191750572dd04d782cb99026e88b37045b
+  market  spot 0.077718 | TWAP 5m 0.077702 1h 0.079470 | ref 0.079597
+  decide  BUY ~40 USDT (score 1, risk high)
+          - DEX -2.36% below reference (env REF_PRICE); edge after 0.30% fee
+  filled  513.068135487761286991 WHSK  NAV 394.70 USDT  tx 0xfb6027863109e67ec375bceba099c8120f31640d4b83819d2cabb5847bb10061
+  journal reasonHash 0x13e50479f84d9e95028103db796d29774e66fd0be28f51c0ac5638b9b39ed566
+
+== 6. A compromised / hallucinating agent tries to break the rules. The contract says no. 
+  500 USDT market buy, minOut = 0: REVERTED TradeTooLarge(500000000, 60000000)
+  40 USDT buy with minOut = 0 (sandwich bait): REVERTED MinOutTooLoose(0, 509639391521453759233)
+  agent tries to withdraw funds to itself: REVERTED NotOwner()
+  agent tries to loosen the stop-loss: REVERTED OnlyTighten()
+
+== 7. Crash: whale dumps another 300k WHSK. The agent is OFFLINE; a permissionless keeper runs the stop. 
+keeper: TWAP 0.077702 has not crossed stop/take-profit; nothing to do
+-> spot crashed but the TWAP has not crossed the stop yet: a one-block wick cannot trigger it
+  [+60s] keeper: TWAP 0.076453 crossed the stop, but spot is still far below the TWAP; the anti-sandwich minOut holds the exit until they reconverge
+  [+120s] keeper: TWAP 0.075217 crossed the stop, but spot is still far below the TWAP; the anti-sandwich minOut holds the exit until they reconverge
+  [+180s] keeper: TWAP 0.074001 crossed the stop, but spot is still far below the TWAP; the anti-sandwich minOut holds the exit until they reconverge
+  [+240s] keeper: TWAP 0.072812 crossed the stop, but spot is still far below the TWAP; the anti-sandwich minOut holds the exit until they reconverge
+  [+300s] keeper: TWAP 0.071635 crossed the stop, but spot is still far below the TWAP; the anti-sandwich minOut holds the exit until they reconverge
+  [+360s] keeper: STOP-LOSS executed at TWAP 0.070484 tx 0x01176e069f1f12e1ecd9dbb722ffe3507dfcfd7eb35fa57122c81140cf43ae4b (gas 181170)
+
+== 8. Report: positions, PnL and a verifiable decision journal ===============
+you> status
+Vault 0x38a024C0b412B9d1db8BC398140D00F5Af3093D4 on HSK mainnet fork (local)
+  Position   0.00 WHSK (~0.00 USDT) + 377.90 USDT
+  NAV        377.90 USDT   PnL -18.96 USDT (-4.78%)   drawdown 4.78% of 12% breaker
+  Price      spot 0.069587  TWAP(600s) 0.070456 USDT/WHSK
+  Stops      stop-loss off  take-profit off
+  Limits     60 USDT/trade, 220/300 USDT left today, slippage 1%, exposure <= 80%
+  Agent      size 40 USDT, risk high, every 120s, running
+  Trades     2 agent trades, 1 keeper exits
+you> show trades
+#1 BUY         40.00 USDT -> 513.17 WHSK @TWAP 0.077702  tx 0x0b6162cae4bdfb45c4deca2c719387cf35f946d1eb560b373868aee33db52063
+     reasonHash 0x7aa6e98cc2a40ebc... (verified: DEX -2.38% below reference (env REF_PRICE); edge after 0.30% fee)
+#2 BUY         40.00 USDT -> 513.07 WHSK @TWAP 0.077702  tx 0xfb6027863109e67ec375bceba099c8120f31640d4b83819d2cabb5847bb10061
+     reasonHash 0x13e50479f84d9e95... (verified: DEX -2.36% below reference (env REF_PRICE); edge after 0.30% fee)
+#- STOP-LOSS   sold 2026.24 WHSK -> 140.64 USDT @TWAP 0.070470 by keeper 0x25597E  tx 0x01176e069f1f12e1ecd9dbb722ffe3507dfcfd7eb35fa57122c81140cf43ae4b
+
+Journal files: /workspace/hsk-horizon-entry/agent/journal (keccak256(file) == on-chain reasonHash)
+
+Demo complete. Deployment written to deployments/local-fork.json.
+Fork still running on http://127.0.0.1:8547. Try: RPC_URL=http://127.0.0.1:8547 AGENT_PK=<anvil #1> npm run chat   (Ctrl+C to stop)

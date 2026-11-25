@@ -1,0 +1,19 @@
+
+> hsk-sentinel-agent@1.0.0 test
+> node --test test/*.test.js
+
+✔ live HSKSwap tick converts to ~0.08 USDT/WHSK (0.769599ms)
+✔ flat market -> hold (1.123938ms)
+✔ DEX below reference by more than fee -> buy, capped by user size and contract cap (0.230025ms)
+✔ spread inside fee band is ignored (0.143926ms)
+✔ downtrend with inventory -> sell (0.129708ms)
+✔ buy blocked once exposure target is reached (0.125043ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 65.360932
+
